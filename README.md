@@ -1,11 +1,11 @@
 # tvrager
-A Node.js client library for [TVRage](http://www.tvrage.com)'s RSS feeds.
+A Node.js client library for [TVRage](http://www.tvrage.com)'s API.
 
 ## Installation
     npm install tvrager
 
 ## Usage
-See [test.js](test.js)
+See [test.js](test.js).
 
 ## Source
 https://github.com/zarac/tvrager

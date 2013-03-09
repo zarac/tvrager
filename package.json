@@ -1,16 +1,27 @@
 {
   "name": "tvrager",
-  "version": "0.0.0",
-  "main": "main.js",
-  "keywords": [
-    "tvrage"
-  ],
+  "description": "A client library for TVRage.com's API.",
+  "version": "0.1.0",
   "homepage": "https://github.com/zarac/tvrager",
   "author": {
     "name": "Hannes Landstedt",
-    "email": "hannes@zarac.se"
+    "email": "contact@zarac.se"
   },
+  "main": "main.js",
+  "keywords": [
+    "tvrage",
+    "tv",
+    "api"
+  ],
   "dependencies": {
     "xml2js": "0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zarac/tvrager.git"
+  },
+  "license": "NULL",
+  "engine": {
+    "node": ">=0.8"
   }
 }
