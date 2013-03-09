@@ -1,5 +1,5 @@
 # tvrager
-A Node.js client library for [TVRage](http://www.tvrage.com).
+A Node.js client library for [TVRage](http://www.tvrage.com)'s RSS feeds.
 
 ## Installation
     npm install tvrager
@@ -16,6 +16,5 @@ Hannes Landstedt a.k.a. zarac
 ## License
 NULL (No Unnecessary License - License)
 
----
-###### Extra Keywords
-node api
+## Extra Keywords
+node api module
