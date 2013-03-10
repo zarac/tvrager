@@ -25,9 +25,11 @@
 var http = require('http'),
     xml2js = require('xml2js');
 
+var eyes = require('eyes').inspector();
+
 var baseUrl = 'http://services.tvrage.com/feeds/';
 
-var ragify = function(url, callback, format) {
+var ragify = function(url, callback, format, cleaner) {
     http.get(url, function(respons) {
         var xml = '';
         respons.on('data', function(chunk) {
@@ -35,16 +37,22 @@ var ragify = function(url, callback, format) {
         });
         respons.on('end', function() {
             if (format === 'xml') callback( { xml: xml });
-            else jsonify(xml, callback);
+            else if (format === 'xml2js') jsonify(xml, callback);
+            else {
+                jsonify(xml, function(result) {
+                    if (result.error) callback(result);
+                    else callback(cleaner(result));
+                });
+            }
         });
     }).on('error', function(e) {
-        callback({ error: e.message });
+        callback({ error: 'HTTP error (' + e.message + ').' });
     });
 };
 
 var jsonify = function(xml, callback) {
     xml2js.parseString(xml, function(err, result) {
-        if (err) callback({ error: err });
+        if (err) callback({ error: 'Parsing XML failed. (' + err.message + ').' });
         else callback(result);
     });
 };
@@ -102,73 +110,36 @@ var clean_list_shows = function(xml2js) {
 //* Exports
 module.exports = {
     find : function(name, callback, format) {
-        if (!format || !(format == 'xml' || format == 'xml2js')) {
-            var realcallback = callback;
-            callback = function(result) {
-                realcallback(clean_find(result));
-            }
-        }
-        ragify(baseUrl + 'search.php?show=' + name, callback, format);
+        ragify(baseUrl + 'search.php?show=' + name, callback, format,
+                clean_find);
     },
 
     findFull : function(name, callback, format) {
-        if (!format || !(format == 'xml' || format == 'xml2js')) {
-            var realcallback = callback;
-            callback = function(result) {
-                realcallback(clean_find_full(result));
-            }
-        }
-        ragify(baseUrl + 'full_search.php?show=' + name, callback, format);
+        ragify(baseUrl + 'full_search.php?show=' + name, callback, format,
+                clean_find_full);
     },
 
     getEpisodeInfo : function(sid, ep, callback, format) {
-        if (!format || !(format == 'xml' || format == 'xml2js')) {
-            var realcallback = callback;
-            callback = function(result) {
-                realcallback(clean_episode_info(result));
-            }
-        }
         ragify(baseUrl + 'episodeinfo.php?sid=' + sid + '&ep=' + ep, callback,
-                format);
+                format, clean_episode_info);
     },
 
     getEpisodeList : function(id, callback, format) {
-        if (!format || !(format == 'xml' || format == 'xml2js')) {
-            var realcallback = callback;
-            callback = function(result) {
-                realcallback(clean_episode_list(result));
-            }
-        }
-        ragify(baseUrl + 'episode_list.php?sid=' + id, callback, format);
+        ragify(baseUrl + 'episode_list.php?sid=' + id, callback, format,
+                clean_episode_list);
     },
 
     getFull : function(id, callback, format) {
-        if (!format || !(format == 'xml' || format == 'xml2js')) {
-            var realcallback = callback;
-            callback = function(result) {
-                realcallback(clean_full(result));
-            }
-        }
-        ragify(baseUrl + 'full_show_info.php?sid=' + id, callback, format);
+        ragify(baseUrl + 'full_show_info.php?sid=' + id, callback, format,
+                clean_full);
     },
 
     getShowInfo : function(id, callback, format) {
-        if (!format || !(format == 'xml' || format == 'xml2js')) {
-            var realcallback = callback;
-            callback = function(result) {
-                realcallback(clean_show_info(result));
-            }
-        }
-        ragify(baseUrl + 'showinfo.php?sid=' + id, callback, format);
+        ragify(baseUrl + 'showinfo.php?sid=' + id, callback, format,
+                clean_show_info);
     },
 
     listShows : function(callback, format) {
-        if (!format || !(format == 'xml' || format == 'xml2js')) {
-            var realcallback = callback;
-            callback = function(result) {
-                realcallback(clean_list_shows(result));
-            }
-        }
-        ragify(baseUrl + 'show_list.php', callback, format);
+        ragify(baseUrl + 'show_list.php', callback, format, clean_list_shows);
     }
 }
