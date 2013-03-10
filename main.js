@@ -72,19 +72,19 @@ var clean_episode_info = function(xml2js) {
     return xml2js;
 };
 
-var clean_episode_list = function(list) {
-    var out = {
-        name: list.Show.name[0],
+var clean_episode_list = function(xml2js) {
+    var cleaned = {
+        name: xml2js.Show.name[0],
         seasons: []
     };
-    for (var i = 0; i < list.Show.Episodelist[0].Season.length; i++) {
-        var s = list.Show.Episodelist[0].Season[i];
+    for (var i = 0; i < xml2js.Show.Episodelist[0].Season.length; i++) {
+        var s = xml2js.Show.Episodelist[0].Season[i];
         var season = {
             number: s.$.no,
             episodes: []
         };
-        for (var i = 0; i < s.episode.length; i++) {
-            var e = s.episode[i];
+        for (var j = 0; j < s.episode.length; j++) {
+            var e = s.episode[j];
             var episode = {
                 title: e.title[0],
                 airdate: e.airdate[0],
@@ -95,9 +95,9 @@ var clean_episode_list = function(list) {
             };
             season.episodes.push(episode);
         };
-        out.seasons.push(season);
+        cleaned.seasons.push(season);
     }
-    return out;
+    return cleaned;
 };
 
 var clean_full = function(xml2js) {
