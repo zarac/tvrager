@@ -9,7 +9,7 @@ npm install tvrager
 
 
 ## Usage
-Example of searching for episodes matching "Person of Interest":
+Example of searching for shows matching "Person of Interest":
 ```javascript
 tvrager.find('Person of Interest', function(list) {
     console.log(list);
