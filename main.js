@@ -25,8 +25,6 @@
 var http = require('http'),
     xml2js = require('xml2js');
 
-var eyes = require('eyes').inspector();
-
 var baseUrl = 'http://services.tvrage.com/feeds/';
 
 var ragify = function(url, callback, format, cleaner) {
@@ -75,7 +73,6 @@ var clean_episode_info = function(xml2js) {
 };
 
 var clean_episode_list = function(list) {
-    /// TODO
     var out = {
         name: list.Show.name[0],
         seasons: []
@@ -84,8 +81,20 @@ var clean_episode_list = function(list) {
         var s = list.Show.Episodelist[0].Season[i];
         var season = {
             number: s.$.no,
-            episodes: s.episode
-        }
+            episodes: []
+        };
+        for (var i = 0; i < s.episode.length; i++) {
+            var e = s.episode[i];
+            var episode = {
+                title: e.title[0],
+                airdate: e.airdate[0],
+                epnum: e.epnum[0],
+                seasonnum: e.seasonnum[0],
+                prodnum: e.prodnum[0],
+                url: e.link[0]
+            };
+            season.episodes.push(episode);
+        };
         out.seasons.push(season);
     }
     return out;
