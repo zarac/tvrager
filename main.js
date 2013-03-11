@@ -59,6 +59,7 @@ var jsonify = function(xml, callback) {
 
 //* Cleaners
 var clean_find = function(xml2js) {
+    if (xml2js.Results == 0) return { result: { shows: [] }};
     var cleaned = {
         result: {
             shows: xml2js.Results.show.map(function(e) {
