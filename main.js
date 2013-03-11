@@ -28,6 +28,7 @@ var http = require('http'),
 var baseUrl = 'http://services.tvrage.com/feeds/';
 
 var ragify = function(url, callback, format, cleaner) {
+    console.log('regify(%s, ..)', url);
     http.get(url, function(respons) {
         var xml = '';
         respons.on('data', function(chunk) {
