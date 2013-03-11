@@ -59,8 +59,25 @@ var jsonify = function(xml, callback) {
 
 //* Cleaners
 var clean_find = function(xml2js) {
-    /// TODO
-    return xml2js;
+    var cleaned = {
+        result: {
+            shows: xml2js.Results.show.map(function(e) {
+                return {
+                    classification: e.classification[0],
+                    country: e.country[0],
+                    ended: e.ended[0],
+                    genres: e.genres[0].genre,
+                    link: e.link[0],
+                    name: e.name[0],
+                    seasons: e.seasons[0],
+                    showid: e.showid[0],
+                    started: e.started[0],
+                    status: e.status[0]
+                };
+            })
+        }
+    };
+    return cleaned;
 };
 
 var clean_find_full = function(xml2js) {
