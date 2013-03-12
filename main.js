@@ -28,7 +28,7 @@ var http = require('http'),
 var baseUrl = 'http://services.tvrage.com/feeds/';
 
 var ragify = function(url, callback, format, cleaner) {
-    console.log('regify(%s, ..)', url);
+    console.log('ragify(%s, ..)', url);
     http.get(url, function(respons) {
         var xml = '';
         respons.on('data', function(chunk) {
@@ -45,13 +45,15 @@ var ragify = function(url, callback, format, cleaner) {
             }
         });
     }).on('error', function(e) {
+        console.log('HTTP error (' + e.message + ').');
         callback({ error: 'HTTP error (' + e.message + ').' });
     });
 };
 
 var jsonify = function(xml, callback) {
     xml2js.parseString(xml, function(err, result) {
-        if (err) callback({ error: 'Parsing XML failed. (' + err.message + ').' });
+        if (err) callback({ error: 'Parsing XML failed. (' + err.message + ').'
+        });
         else callback(result);
     });
 };
@@ -66,7 +68,8 @@ var clean_find = function(xml2js) {
                 return {
                     classification: e.classification[0],
                     country: e.country[0],
-                    ended: e.ended[0],
+                    ended: (typeof e.ended[0] === 'object' || e.ended[0] ===
+                        '0' ? 'ongoing' : e.ended[0]),
                     genres: e.genres[0].genre,
                     link: e.link[0],
                     name: e.name[0],
@@ -125,8 +128,30 @@ var clean_full = function(xml2js) {
 };
 
 var clean_show_info = function(xml2js) {
-    /// TODO
-    return xml2js;
+    if (!xml2js.Showinfo.showid) return { error: 'No such show.' };
+    var show = xml2js.Showinfo;
+    var cleaned = {
+        classification: show.classification[0],
+        ended: (typeof show.ended[0] === 'object' || e.ended[0] === '0' ?
+                'ongoing' : show.ended[0]),
+        network: {
+            name: show.network[0]._,
+            country: show.network[0].$.country },
+        origin_country: show.origin_country[0],
+        runtime: show.runtime[0],
+        seasoncount: show.seasons[0],
+        showid: show.showid[0],
+        showlink: show.showlink[0],
+        showname: show.showname[0],
+        startdate: show.startdate[0],
+        started: show.started[0],
+        status: show.status[0],
+        timezone: show.timezone[0]
+    };
+    if (show.airday) cleaned.airday = show.airday[0];
+    if (show.airtime) cleaned.airtime = show.airtime[0];
+    if (show.genres) cleaned.genres = show.genres[0].genre;
+    return cleaned;
 };
 
 var clean_list_shows = function(xml2js) {
