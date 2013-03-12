@@ -132,7 +132,7 @@ var clean_show_info = function(xml2js) {
     var show = xml2js.Showinfo;
     var cleaned = {
         classification: show.classification[0],
-        ended: (typeof show.ended[0] === 'object' || e.ended[0] === '0' ?
+        ended: (typeof show.ended[0] === 'object' || show.ended[0] === '0' ?
                 'ongoing' : show.ended[0]),
         network: {
             name: show.network[0]._,
