@@ -51,9 +51,8 @@ See [test.js](test.js) for more examples.
 
 
 ## TODO
-* Implement the cleaners for find, findFull, getEpisodeInfo, getFull,
-  getShowInfo and listShows. At the moment, they're simply the same as
-  the 'xml2js' format.
+* Implement the cleaners for findFull, getEpisodeInfo, getFull and listShows.
+  At the moment, they're simply the same as the 'xml2js' format.
 * Proper testing.
 
 
