@@ -71,10 +71,10 @@ var clean_find = function(xml2js) {
                     ended: (typeof e.ended[0] === 'object' || e.ended[0] ===
                         '0' ? 'ongoing' : e.ended[0]),
                     genres: e.genres[0].genre,
-                    link: e.link[0],
+                    id: e.showid[0],
+                    url: e.link[0],
                     name: e.name[0],
-                    seasons: e.seasons[0],
-                    showid: e.showid[0],
+                    seasoncount: e.seasons[0],
                     started: e.started[0],
                     status: e.status[0]
                 };
@@ -102,17 +102,18 @@ var clean_episode_list = function(xml2js) {
     for (var i = 0; i < xml2js.Show.Episodelist[0].Season.length; i++) {
         var s = xml2js.Show.Episodelist[0].Season[i];
         var season = {
-            number: s.$.no,
+            number: (s.$.no.length == 1 ? '0' + s.$.no : s.$.no),
             episodes: []
         };
         for (var j = 0; j < s.episode.length; j++) {
             var e = s.episode[j];
             var episode = {
-                title: e.title[0],
                 airdate: e.airdate[0],
+                eid: 'S' + season.number + 'E' + e.seasonnum[0],
                 epnum: e.epnum[0],
-                seasonnum: e.seasonnum[0],
                 prodnum: e.prodnum[0],
+                number: e.seasonnum[0],
+                title: e.title[0],
                 url: e.link[0]
             };
             season.episodes.push(episode);
@@ -134,15 +135,15 @@ var clean_show_info = function(xml2js) {
         classification: show.classification[0],
         ended: (typeof show.ended[0] === 'object' || show.ended[0] === '0' ?
                 'ongoing' : show.ended[0]),
+        id: show.showid[0],
+        name: show.showname[0],
         network: {
-            name: show.network[0]._,
-            country: show.network[0].$.country },
+            country: show.network[0].$.country,
+            name: show.network[0]._ },
         origin_country: show.origin_country[0],
         runtime: show.runtime[0],
         seasoncount: show.seasons[0],
-        showid: show.showid[0],
-        showlink: show.showlink[0],
-        showname: show.showname[0],
+        url: show.showlink[0],
         startdate: show.startdate[0],
         started: show.started[0],
         status: show.status[0],
