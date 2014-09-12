@@ -99,27 +99,29 @@ var clean_episode_list = function(xml2js) {
         name: xml2js.Show.name[0],
         seasons: []
     };
-    for (var i = 0; i < xml2js.Show.Episodelist[0].Season.length; i++) {
-        var s = xml2js.Show.Episodelist[0].Season[i];
-        var season = {
-            number: (s.$.no.length == 1 ? '0' + s.$.no : s.$.no),
-            episodes: []
-        };
-        for (var j = 0; j < s.episode.length; j++) {
-            var e = s.episode[j];
-            var episode = {
-                airdate: e.airdate[0],
-                eid: 'S' + season.number + 'E' + e.seasonnum[0],
-                epnum: e.epnum[0],
-                prodnum: e.prodnum[0],
-                number: e.seasonnum[0],
-                title: e.title[0],
-                url: e.link[0]
-            };
-            season.episodes.push(episode);
-        };
-        cleaned.seasons.push(season);
-    }
+    if (xml2js.Show && xml2js.Show.Episodelist) {
+      for (var i = 0; i < xml2js.Show.Episodelist[0].Season.length; i++) {
+          var s = xml2js.Show.Episodelist[0].Season[i];
+          var season = {
+              number: (s.$.no.length == 1 ? '0' + s.$.no : s.$.no),
+              episodes: []
+          };
+          for (var j = 0; j < s.episode.length; j++) {
+              var e = s.episode[j];
+              var episode = {
+                  airdate: e.airdate[0],
+                  eid: 'S' + season.number + 'E' + e.seasonnum[0],
+                  epnum: e.epnum[0],
+                  prodnum: e.prodnum[0],
+                  number: e.seasonnum[0],
+                  title: e.title[0],
+                  url: e.link[0]
+              };
+              season.episodes.push(episode);
+          };
+          cleaned.seasons.push(season);
+      };
+    };
     return cleaned;
 };
 
